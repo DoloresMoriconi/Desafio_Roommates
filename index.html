@@ -200,7 +200,7 @@ Articulos de limpieza</textarea
       };
 
       const nuevoRoommate = () => {
-        fetch("http://localhost:3000/roommate", { method: "POST" })
+        fetch("http://localhost:3000/roommates", { method: "POST" })
           .then((res) => res.json())
           .then(() => {
             imprimir();
