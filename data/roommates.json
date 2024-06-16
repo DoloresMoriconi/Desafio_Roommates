@@ -4,23 +4,30 @@
       "id": "b4bceeb3-9ccc-4a7f-988a-47a4a18d90a6",
       "nombre": "Annelene Sprenger",
       "email": "annelene.sprenger@example.com",
-      "debe": 0,
-      "recibe": 10000,
-      "total": 10000
+      "debe": 3000,
+      "recibe": 11250,
+      "total": 8250
     },
     {
       "nombre": "Melchior De Wijn",
-      "debe": 5000,
+      "debe": 6750,
       "recibe": 0,
       "id": "8b43a974-857e-4df2-a7db-924077433cae",
-      "total": -5000
+      "total": -6750
     },
     {
       "nombre": "Ceylan Arıcan",
-      "debe": 5000,
+      "debe": 6750,
       "recibe": 0,
       "id": "877d3a8b-6a77-413c-a01e-5f3cbca80584",
-      "total": -5000
+      "total": -6750
+    },
+    {
+      "nombre": "Aurelia Martin",
+      "debe": 3750,
+      "recibe": 9000,
+      "id": "a74ee610-b121-47d1-a5d6-8b72bae2ecc5",
+      "total": 5250
     }
   ]
 }

@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import {v4 as uuidv4} from "uuid";
 import path from "path";
 import { fileURLToPath } from 'url';
+import { error } from "console";
 
 // Obtener la ruta correcta del archivo en un entorno ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -12,31 +13,32 @@ const roommatesFile = path.join(__dirname, "../data/roommates.json")
 const gastosFile = path.join(__dirname, "../data/gastos.json");
 
 async function crearRoommate () {
-   const data = await axios.get("https://randomuser.me/api")
-   const usuarioRandom =  data.data.results[0]
-   const roommate = {
-      id: uuidv4(),
-      nombre: `${usuarioRandom.name.first} ${usuarioRandom.name.last}`,
-      email: usuarioRandom.email,
-      debe: 0,
-      recibe: 0
-   }
+   try {
+      const data = await axios.get("https://randomuser.me/api")
+      const usuarioRandom =  data.data.results[0]
+      const roommate = {
+         id: uuidv4(),
+         nombre: `${usuarioRandom.name.first} ${usuarioRandom.name.last}`,
+         email: usuarioRandom.email,
+         debe: 0,
+         recibe: 0
+      }
 
-   fs.readFile(roommatesFile, "utf-8")
-   .then(data => {
+      const dataRoommates = await fs.readFile(roommatesFile, "utf-8")
       const nuevoUsuario =  JSON.parse(data)
 
       nuevoUsuario.roommates.push(roommate)
-      fs.writeFile(roommatesFile, JSON.stringify(nuevoUsuario))
-      .then(() => {
-         console.log("Roommate agregado con éxito")
-      })
-      .catch(err => {
-         console.error(`Ha ocurrido un error: ${err}`)
-      })
-   })
-   return roommate
-}
+
+      await fs.writeFile(roommatesFile, JSON.stringify(nuevoUsuario))
+      
+      console.log("Roommate agregado con éxito")
+      
+      return roommate
+      } catch(error) {
+         console.error(`Ha ocurrido un error: ${error}`)   
+      }
+   }
+
 
 const obtenerRoommate = async () => {
    try {
@@ -103,7 +105,7 @@ const calcularDeuda = async () => {
       
       }
 
-         roommate.total = roommate.recibe - roommate.debe
+         roommate.total = Math.round((roommate.recibe - roommate.debe)* 100)/100
 
          return roommate
       })
