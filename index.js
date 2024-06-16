@@ -14,7 +14,7 @@ import { router as gastos } from "./routes/gastos.js";
 app.use(express.json())
 
 app.get("/", (req, res) => {
-   res.sendFile(__dirname + "/index.html")
+   res.sendFile(path.join(__dirname + "/index.html"))
 })
 
 app.use("/roommates", roommates)
