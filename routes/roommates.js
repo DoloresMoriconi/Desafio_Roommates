@@ -4,8 +4,16 @@ import fs from "fs/promises";
 import path from "path";
 import {v4 as uuidv4} from "uuid";
 import { obtenerRoommate, calcularDeuda } from "../modulos/roommates.js";
+import { fileURLToPath } from 'url';
 
 const router = Router()
+
+// Obtener la ruta correcta del archivo en un entorno ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const roommatesFile = path.join(__dirname, "../data/roommates.json");
+
 
 //va a leer los roommates que tenmos en la carpeta data
 router.get("/", async (req, res) => {
@@ -32,16 +40,11 @@ router.post("/", async (req, res) => {
          recibe: 0
       }
 
-      const filePath = path.join(import.meta.dirname, "../data/roommates.json")
-   fs.readFile(filePath, "utf-8")
-      .then(data => {
-         const roommatesJson = JSON.parse(data)
-         roommatesJson.roommates.push(roommatesData)
-         return roommatesJson
-      })
-      .then(data => {
-         fs.writeFile(filePath, JSON.stringify(data))
-      })
+      const data = await fs.readFile(roommatesFile, "utf-8")
+      const roommatesJSON = JSON.parse(data)
+      roommatesJSON.roommates.push(roommatesData)
+      await fs.writeFile(roommatesFile, JSON.stringify(roommatesJSON))
+   
       res.json(roommatesData)
    } catch (error) {
       res.status(500).json({error})

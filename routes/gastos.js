@@ -2,9 +2,17 @@ import { Router } from "express";
 import {v4 as uuidv4} from "uuid";
 import { obtenerGastos, crearGasto, editarGasto, borrarGasto } from "../modulos/gastos.js"
 import { calcularDeuda } from "../modulos/roommates.js";
+import enviarCorreo from "../services/emailService.js";
+import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const router = Router()
+const roommatesFile = path.join(__dirname, "../data/roommates.json");
+
 
 router.get("/", async (req, res) => {
    try {
@@ -56,6 +64,15 @@ router.post("/", async (req, res) => {
          
          console.log("Deudas recalculadas:", roommates);
 
+         // Leer el archivo de roommates para obtener la lista de correos electrónicos
+         const roommatesData = await fs.readFile(roommatesFile, 'utf-8');
+         const { roommates: roommateList } = JSON.parse(roommatesData);
+         const emailList = roommateList.map(roommate => roommate.email);
+         
+         // Enviar correo electrónico a todos los roommates
+         const subject = 'Nuevo gasto registrado';
+         const text = `Se ha registrado un nuevo gasto por ${gasto.monto} a nombre de ${gasto.roommate}.`;
+         await Promise.all(emailList.map(email => enviarCorreo(email, subject, text)));
 
          // respondemos con status creado
          res.status(201).json({

@@ -3,7 +3,7 @@ import fs from "fs/promises";
 import {v4 as uuidv4} from "uuid";
 import path from "path";
 import { fileURLToPath } from 'url';
-import { error } from "console";
+
 
 // Obtener la ruta correcta del archivo en un entorno ESM
 const __filename = fileURLToPath(import.meta.url);
